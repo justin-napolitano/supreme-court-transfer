@@ -1,4 +1,4 @@
-package com.example;
+package com.supreme_court_transfer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

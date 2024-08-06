@@ -1,15 +1,15 @@
-package com.example;
+package com.supreme_court_transfer;
 
-public class CallNumber {
+public class Subject {
     private int id;
-    private String callNumber;
     private String externalId;
+    private String subject;
 
     // Constructor
-    public CallNumber(int id, String callNumber, String externalId) {
+    public Subject(int id, String externalId, String subject) {
         this.id = id;
-        this.callNumber = callNumber;
         this.externalId = externalId;
+        this.subject = subject;
     }
 
     // Getters and setters
@@ -21,19 +21,19 @@ public class CallNumber {
         this.id = id;
     }
 
-    public String getCallNumber() {
-        return callNumber;
-    }
-
-    public void setCallNumber(String callNumber) {
-        this.callNumber = callNumber;
-    }
-
     public String getExternalId() {
         return externalId;
     }
 
     public void setExternalId(String externalId) {
         this.externalId = externalId;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }

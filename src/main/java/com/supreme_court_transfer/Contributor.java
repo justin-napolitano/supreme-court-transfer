@@ -1,15 +1,15 @@
-package com.example;
+package com.supreme_court_transfer;
 
-public class Subject {
+public class Contributor {
     private int id;
     private String externalId;
-    private String subject;
+    private String contributor;
 
     // Constructor
-    public Subject(int id, String externalId, String subject) {
+    public Contributor(int id, String externalId, String contributor) {
         this.id = id;
         this.externalId = externalId;
-        this.subject = subject;
+        this.contributor = contributor;
     }
 
     // Getters and setters
@@ -29,11 +29,11 @@ public class Subject {
         this.externalId = externalId;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getContributor() {
+        return contributor;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setContributor(String contributor) {
+        this.contributor = contributor;
     }
 }

@@ -1,7 +1,9 @@
-package com.example;
+package com.supreme_court_transfer;
 
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Values;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,13 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataTransferService {
+    private static final Logger logger = LoggerFactory.getLogger(DataTransferService.class);
 
     // CallNumber methods
-    public static List<CallNumber> fetchCallNumbersFromPostgres() throws Exception {
+    public static List<CallNumber> fetchCallNumbersFromPostgres(int limit) throws Exception {
         List<CallNumber> callNumbers = new ArrayList<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, call_number, external_id FROM callnumbers");
+        ResultSet rs = stmt.executeQuery("SELECT id, call_number, external_id FROM callnumbers LIMIT " + limit);
 
         while (rs.next()) {
             callNumbers.add(new CallNumber(
@@ -29,6 +32,7 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
+        logger.info("Fetched {} call numbers from PostgreSQL.", callNumbers.size());
         return callNumbers;
     }
 
@@ -43,19 +47,22 @@ public class DataTransferService {
                     ));
         }
         neo4jSession.close();
+        logger.info("Inserted {} call numbers into Neo4j.", callNumbers.size());
     }
 
-    public static void transferCallNumbers() throws Exception {
-        List<CallNumber> callNumbers = fetchCallNumbersFromPostgres();
+    public static void transferCallNumbers(int limit) throws Exception {
+        logger.debug("Starting transfer of call numbers.");
+        List<CallNumber> callNumbers = fetchCallNumbersFromPostgres(limit);
         insertCallNumbersIntoNeo4j(callNumbers);
+        logger.debug("Completed transfer of call numbers.");
     }
 
     // Contributor methods
-    public static List<Contributor> fetchContributorsFromPostgres() throws Exception {
+    public static List<Contributor> fetchContributorsFromPostgres(int limit) throws Exception {
         List<Contributor> contributors = new ArrayList<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, external_id, contributor FROM contributors");
+        ResultSet rs = stmt.executeQuery("SELECT id, external_id, contributor FROM contributors LIMIT " + limit);
 
         while (rs.next()) {
             contributors.add(new Contributor(
@@ -68,6 +75,7 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
+        logger.info("Fetched {} contributors from PostgreSQL.", contributors.size());
         return contributors;
     }
 
@@ -82,19 +90,22 @@ public class DataTransferService {
                     ));
         }
         neo4jSession.close();
+        logger.info("Inserted {} contributors into Neo4j.", contributors.size());
     }
 
-    public static void transferContributors() throws Exception {
-        List<Contributor> contributors = fetchContributorsFromPostgres();
+    public static void transferContributors(int limit) throws Exception {
+        logger.debug("Starting transfer of contributors.");
+        List<Contributor> contributors = fetchContributorsFromPostgres(limit);
         insertContributorsIntoNeo4j(contributors);
+        logger.debug("Completed transfer of contributors.");
     }
 
     // Resource methods
-    public static List<Resource> fetchResourcesFromPostgres() throws Exception {
+    public static List<Resource> fetchResourcesFromPostgres(int limit) throws Exception {
         List<Resource> resources = new ArrayList<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, pdf, image, external_id FROM resources");
+        ResultSet rs = stmt.executeQuery("SELECT id, pdf, image, external_id FROM resources LIMIT " + limit);
 
         while (rs.next()) {
             resources.add(new Resource(
@@ -108,6 +119,7 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
+        logger.info("Fetched {} resources from PostgreSQL.", resources.size());
         return resources;
     }
 
@@ -123,19 +135,22 @@ public class DataTransferService {
                     ));
         }
         neo4jSession.close();
+        logger.info("Inserted {} resources into Neo4j.", resources.size());
     }
 
-    public static void transferResources() throws Exception {
-        List<Resource> resources = fetchResourcesFromPostgres();
+    public static void transferResources(int limit) throws Exception {
+        logger.debug("Starting transfer of resources.");
+        List<Resource> resources = fetchResourcesFromPostgres(limit);
         insertResourcesIntoNeo4j(resources);
+        logger.debug("Completed transfer of resources.");
     }
 
     // Item methods
-    public static List<Item> fetchItemsFromPostgres() throws Exception {
+    public static List<Item> fetchItemsFromPostgres(int limit) throws Exception {
         List<Item> items = new ArrayList<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, notes, call_number, created_published, title, date, source_collection, external_id FROM items");
+        ResultSet rs = stmt.executeQuery("SELECT id, notes, call_number, created_published, title, date, source_collection, external_id FROM items LIMIT " + limit);
 
         while (rs.next()) {
             items.add(new Item(
@@ -153,6 +168,7 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
+        logger.info("Fetched {} items from PostgreSQL.", items.size());
         return items;
     }
 
@@ -172,19 +188,22 @@ public class DataTransferService {
                     ));
         }
         neo4jSession.close();
+        logger.info("Inserted {} items into Neo4j.", items.size());
     }
 
-    public static void transferItems() throws Exception {
-        List<Item> items = fetchItemsFromPostgres();
+    public static void transferItems(int limit) throws Exception {
+        logger.debug("Starting transfer of items.");
+        List<Item> items = fetchItemsFromPostgres(limit);
         insertItemsIntoNeo4j(items);
+        logger.debug("Completed transfer of items.");
     }
 
     // Subject methods
-    public static List<Subject> fetchSubjectsFromPostgres() throws Exception {
+    public static List<Subject> fetchSubjectsFromPostgres(int limit) throws Exception {
         List<Subject> subjects = new ArrayList<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, external_id, subject FROM subjects");
+        ResultSet rs = stmt.executeQuery("SELECT id, external_id, subject FROM subjects LIMIT " + limit);
 
         while (rs.next()) {
             subjects.add(new Subject(
@@ -197,6 +216,7 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
+        logger.info("Fetched {} subjects from PostgreSQL.", subjects.size());
         return subjects;
     }
 
@@ -211,10 +231,13 @@ public class DataTransferService {
                     ));
         }
         neo4jSession.close();
+        logger.info("Inserted {} subjects into Neo4j.", subjects.size());
     }
 
-    public static void transferSubjects() throws Exception {
-        List<Subject> subjects = fetchSubjectsFromPostgres();
+    public static void transferSubjects(int limit) throws Exception {
+        logger.debug("Starting transfer of subjects.");
+        List<Subject> subjects = fetchSubjectsFromPostgres(limit);
         insertSubjectsIntoNeo4j(subjects);
+        logger.debug("Completed transfer of subjects.");
     }
 }
