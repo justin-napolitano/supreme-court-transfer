@@ -1,3 +1,13 @@
++++
+title =  "Postgres to Neo4j Workflow"
+description = "Streamlining Data Transfer from PostgreSQL to Neo4j with Java"
+tags = ['python', "mysql","databases"]
+images = ["images/feature-image.png"]
+date = "2024-08-06T15:10:02-05:00"
+categories = ["projects"]
+series = ["Java"]
++++
+
 # Streamlining Data Transfer from PostgreSQL to Neo4j with Java
 
 In my previous few posts I put together a postgres db of supreme court meta data. That is cool. I have a few more ideas.. but I wanted to explore the graph a bit before expanding it with some nlp.  So in this post I am writing about how to ingest a bunch of nodes into neo4j with a java workflow. In the next post I'll detail adding relationships.. because it is useless without relationships. 
