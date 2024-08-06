@@ -1,0 +1,9 @@
+com/example/Item.class
+com/example/App.class
+com/example/CallNumber.class
+com/example/Contributor.class
+com/example/PostgresConnection.class
+com/example/Resource.class
+com/example/DataTransferService.class
+com/example/Subject.class
+com/example/Neo4jConnection.class
