@@ -13,10 +13,11 @@ public class RelationshipCreator {
         logger.info("Starting relationship creation process...");
 
         try (Session session = Neo4jConnection.getSession()) {
-            // Example relationship creation logic
+            // Relationship creation methods
             createCallNumberToItemRelationships(session);
-            createContributorToResourceRelationships(session);
-            createItemToSubjectRelationships(session);
+            createResourceToItemRelationships(session);
+            createContributorToItemRelationships(session);
+            createSubjectToItemRelationships(session);
 
             // Add more relationship creation methods as needed
         } catch (Exception e) {
@@ -43,7 +44,7 @@ public class RelationshipCreator {
         session.writeTransaction(new TransactionWork<Void>() {
             @Override
             public Void execute(Transaction tx) {
-                tx.run("MATCH (r:Resource), (i:item) " +
+                tx.run("MATCH (r:Resource), (i:Item) " +
                        "WHERE r.externalId = i.externalId " +
                        "CREATE (r)-[:RESOURCE_OF]->(i)");
                 logger.info("Created relationships between Resources and Items based on external_id.");
@@ -56,9 +57,9 @@ public class RelationshipCreator {
         session.writeTransaction(new TransactionWork<Void>() {
             @Override
             public Void execute(Transaction tx) {
-                tx.run("MATCH (c:Contributor), (i:item) " +
+                tx.run("MATCH (c:Contributor), (i:Item) " +
                        "WHERE c.externalId = i.externalId " +
-                       "CREATE (c)-[:CONTRIBUTED_TO]->(I)");
+                       "CREATE (c)-[:CONTRIBUTED_TO]->(i)");
                 logger.info("Created relationships between Contributors and Items based on external_id.");
                 return null;
             }
