@@ -1,34 +1,14 @@
 package com.supreme_court_transfer;
 
 public class Subject {
-    private int id;
-    private String externalId;
     private String subject;
 
     // Constructor
-    public Subject(int id, String externalId, String subject) {
-        this.id = id;
-        this.externalId = externalId;
+    public Subject(String subject) {
         this.subject = subject;
     }
 
     // Getters and setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-
     public String getSubject() {
         return subject;
     }

@@ -8,66 +8,65 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataTransferService {
     private static final Logger logger = LoggerFactory.getLogger(DataTransferService.class);
 
-    // CallNumber methods
-    public static List<CallNumber> fetchCallNumbersFromPostgres(int limit) throws Exception {
-        List<CallNumber> callNumbers = new ArrayList<>();
+    // Fetch unique items from PostgreSQL
+    public static Set<Item> fetchUniqueItemsFromPostgres(int limit) throws Exception {
+        Set<Item> items = new HashSet<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, call_number, external_id FROM callnumbers LIMIT " + limit);
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT external_id, title, call_number, date FROM items LIMIT " + limit);
 
         while (rs.next()) {
-            callNumbers.add(new CallNumber(
-                    rs.getInt("id"),
+            items.add(new Item(
+                    rs.getString("external_id"),
+                    rs.getString("title"),
                     rs.getString("call_number"),
-                    rs.getString("external_id")
+                    rs.getString("date")
             ));
         }
 
         rs.close();
         stmt.close();
         postgresConn.close();
-        logger.info("Fetched {} call numbers from PostgreSQL.", callNumbers.size());
+        logger.info("Fetched {} unique items from PostgreSQL.", items.size());
+        return items;
+    }
+
+    // Fetch unique call numbers from PostgreSQL
+    public static Set<CallNumber> fetchUniqueCallNumbersFromPostgres(int limit) throws Exception {
+        Set<CallNumber> callNumbers = new HashSet<>();
+        Connection postgresConn = PostgresConnection.getConnection();
+        Statement stmt = postgresConn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT external_id, call_number FROM callnumbers LIMIT " + limit);
+
+        while (rs.next()) {
+            callNumbers.add(new CallNumber(
+                    rs.getString("external_id"),
+                    rs.getString("call_number")
+            ));
+        }
+
+        rs.close();
+        stmt.close();
+        postgresConn.close();
+        logger.info("Fetched {} unique call numbers from PostgreSQL.", callNumbers.size());
         return callNumbers;
     }
 
-    public static void insertCallNumbersIntoNeo4j(List<CallNumber> callNumbers) {
-        Session neo4jSession = Neo4jConnection.getSession();
-        for (CallNumber callNumber : callNumbers) {
-            neo4jSession.run("CREATE (:CallNumber {id: $id, callNumber: $callNumber, externalId: $externalId})",
-                    Values.parameters(
-                            "id", callNumber.getId(),
-                            "callNumber", callNumber.getCallNumber(),
-                            "externalId", callNumber.getExternalId()
-                    ));
-        }
-        neo4jSession.close();
-        logger.info("Inserted {} call numbers into Neo4j.", callNumbers.size());
-    }
-
-    public static void transferCallNumbers(int limit) throws Exception {
-        logger.debug("Starting transfer of call numbers.");
-        List<CallNumber> callNumbers = fetchCallNumbersFromPostgres(limit);
-        insertCallNumbersIntoNeo4j(callNumbers);
-        logger.debug("Completed transfer of call numbers.");
-    }
-
-    // Contributor methods
-    public static List<Contributor> fetchContributorsFromPostgres(int limit) throws Exception {
-        List<Contributor> contributors = new ArrayList<>();
+    // Fetch unique contributors from PostgreSQL
+    public static Set<Contributor> fetchUniqueContributorsFromPostgres(int limit) throws Exception {
+        Set<Contributor> contributors = new HashSet<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, external_id, contributor FROM contributors LIMIT " + limit);
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT contributor FROM contributors LIMIT " + limit);
 
         while (rs.next()) {
             contributors.add(new Contributor(
-                    rs.getInt("id"),
-                    rs.getString("external_id"),
                     rs.getString("contributor")
             ));
         }
@@ -75,140 +74,41 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
-        logger.info("Fetched {} contributors from PostgreSQL.", contributors.size());
+        logger.info("Fetched {} unique contributors from PostgreSQL.", contributors.size());
         return contributors;
     }
 
-    public static void insertContributorsIntoNeo4j(List<Contributor> contributors) {
-        Session neo4jSession = Neo4jConnection.getSession();
-        for (Contributor contributor : contributors) {
-            neo4jSession.run("CREATE (:Contributor {id: $id, externalId: $externalId, contributor: $contributor})",
-                    Values.parameters(
-                            "id", contributor.getId(),
-                            "externalId", contributor.getExternalId(),
-                            "contributor", contributor.getContributor()
-                    ));
-        }
-        neo4jSession.close();
-        logger.info("Inserted {} contributors into Neo4j.", contributors.size());
-    }
-
-    public static void transferContributors(int limit) throws Exception {
-        logger.debug("Starting transfer of contributors.");
-        List<Contributor> contributors = fetchContributorsFromPostgres(limit);
-        insertContributorsIntoNeo4j(contributors);
-        logger.debug("Completed transfer of contributors.");
-    }
-
-    // Resource methods
-    public static List<Resource> fetchResourcesFromPostgres(int limit) throws Exception {
-        List<Resource> resources = new ArrayList<>();
+    // Fetch unique resources from PostgreSQL
+    public static Set<Resource> fetchUniqueResourcesFromPostgres(int limit) throws Exception {
+        Set<Resource> resources = new HashSet<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, pdf, image, external_id FROM resources LIMIT " + limit);
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT external_id, pdf, image FROM resources LIMIT " + limit);
 
         while (rs.next()) {
             resources.add(new Resource(
-                    rs.getInt("id"),
+                    rs.getString("external_id"),
                     rs.getString("pdf"),
-                    rs.getString("image"),
-                    rs.getString("external_id")
+                    rs.getString("image")
             ));
         }
 
         rs.close();
         stmt.close();
         postgresConn.close();
-        logger.info("Fetched {} resources from PostgreSQL.", resources.size());
+        logger.info("Fetched {} unique resources from PostgreSQL.", resources.size());
         return resources;
     }
 
-    public static void insertResourcesIntoNeo4j(List<Resource> resources) {
-        Session neo4jSession = Neo4jConnection.getSession();
-        for (Resource resource : resources) {
-            neo4jSession.run("CREATE (:Resource {id: $id, pdf: $pdf, image: $image, externalId: $externalId})",
-                    Values.parameters(
-                            "id", resource.getId(),
-                            "pdf", resource.getPdf(),
-                            "image", resource.getImage(),
-                            "externalId", resource.getExternalId()
-                    ));
-        }
-        neo4jSession.close();
-        logger.info("Inserted {} resources into Neo4j.", resources.size());
-    }
-
-    public static void transferResources(int limit) throws Exception {
-        logger.debug("Starting transfer of resources.");
-        List<Resource> resources = fetchResourcesFromPostgres(limit);
-        insertResourcesIntoNeo4j(resources);
-        logger.debug("Completed transfer of resources.");
-    }
-
-    // Item methods
-    public static List<Item> fetchItemsFromPostgres(int limit) throws Exception {
-        List<Item> items = new ArrayList<>();
+    // Fetch unique subjects from PostgreSQL
+    public static Set<Subject> fetchUniqueSubjectsFromPostgres(int limit) throws Exception {
+        Set<Subject> subjects = new HashSet<>();
         Connection postgresConn = PostgresConnection.getConnection();
         Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, notes, call_number, created_published, title, date, source_collection, external_id FROM items LIMIT " + limit);
-
-        while (rs.next()) {
-            items.add(new Item(
-                    rs.getInt("id"),
-                    rs.getString("notes"),
-                    rs.getString("call_number"),
-                    rs.getString("created_published"),
-                    rs.getString("title"),
-                    rs.getString("date"),
-                    rs.getString("source_collection"),
-                    rs.getString("external_id")
-            ));
-        }
-
-        rs.close();
-        stmt.close();
-        postgresConn.close();
-        logger.info("Fetched {} items from PostgreSQL.", items.size());
-        return items;
-    }
-
-    public static void insertItemsIntoNeo4j(List<Item> items) {
-        Session neo4jSession = Neo4jConnection.getSession();
-        for (Item item : items) {
-            neo4jSession.run("CREATE (:Item {id: $id, notes: $notes, callNumber: $callNumber, createdPublished: $createdPublished, title: $title, date: $date, sourceCollection: $sourceCollection, externalId: $externalId})",
-                    Values.parameters(
-                            "id", item.getId(),
-                            "notes", item.getNotes(),
-                            "callNumber", item.getCallNumber(),
-                            "createdPublished", item.getCreatedPublished(),
-                            "title", item.getTitle(),
-                            "date", item.getDate(),
-                            "sourceCollection", item.getSourceCollection(),
-                            "externalId", item.getExternalId()
-                    ));
-        }
-        neo4jSession.close();
-        logger.info("Inserted {} items into Neo4j.", items.size());
-    }
-
-    public static void transferItems(int limit) throws Exception {
-        logger.debug("Starting transfer of items.");
-        List<Item> items = fetchItemsFromPostgres(limit);
-        insertItemsIntoNeo4j(items);
-        logger.debug("Completed transfer of items.");
-    }
-
-    // Subject methods
-    public static List<Subject> fetchSubjectsFromPostgres(int limit) throws Exception {
-        List<Subject> subjects = new ArrayList<>();
-        Connection postgresConn = PostgresConnection.getConnection();
-        Statement stmt = postgresConn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT id, external_id, subject FROM subjects LIMIT " + limit);
+        ResultSet rs = stmt.executeQuery("SELECT DISTINCT subject FROM subjects LIMIT " + limit);
 
         while (rs.next()) {
             subjects.add(new Subject(
-                    rs.getInt("id"),
-                    rs.getString("external_id"),
                     rs.getString("subject")
             ));
         }
@@ -216,28 +116,121 @@ public class DataTransferService {
         rs.close();
         stmt.close();
         postgresConn.close();
-        logger.info("Fetched {} subjects from PostgreSQL.", subjects.size());
+        logger.info("Fetched {} unique subjects from PostgreSQL.", subjects.size());
         return subjects;
     }
 
-    public static void insertSubjectsIntoNeo4j(List<Subject> subjects) {
+    // Insert items into Neo4j
+    public static void insertItemsIntoNeo4j(Set<Item> items) {
         Session neo4jSession = Neo4jConnection.getSession();
-        for (Subject subject : subjects) {
-            neo4jSession.run("CREATE (:Subject {id: $id, externalId: $externalId, subject: $subject})",
+        for (Item item : items) {
+            neo4jSession.run("MERGE (i:Item {externalId: $externalId}) " +
+                            "ON CREATE SET i.title = $title, i.callNumber = $callNumber, i.date = $date",
                     Values.parameters(
-                            "id", subject.getId(),
-                            "externalId", subject.getExternalId(),
-                            "subject", subject.getSubject()
+                            "externalId", item.getExternalId(),
+                            "title", item.getTitle() != null ? item.getTitle() : "",
+                            "callNumber", item.getCallNumber() != null ? item.getCallNumber() : "",
+                            "date", item.getDate() != null ? item.getDate() : ""
                     ));
         }
         neo4jSession.close();
-        logger.info("Inserted {} subjects into Neo4j.", subjects.size());
+        logger.info("Inserted {} unique items into Neo4j.", items.size());
     }
 
+    // Insert call numbers into Neo4j
+    public static void insertCallNumbersIntoNeo4j(Set<CallNumber> callNumbers) {
+        Session neo4jSession = Neo4jConnection.getSession();
+        for (CallNumber callNumber : callNumbers) {
+            neo4jSession.run("MERGE (c:CallNumber {externalId: $externalId}) " +
+                            "ON CREATE SET c.callNumber = $callNumber",
+                    Values.parameters(
+                            "externalId", callNumber.getExternalId(),
+                            "callNumber", callNumber.getCallNumber() != null ? callNumber.getCallNumber() : ""
+                    ));
+        }
+        neo4jSession.close();
+        logger.info("Inserted {} unique call numbers into Neo4j.", callNumbers.size());
+    }
+
+    // Insert contributors into Neo4j
+    public static void insertContributorsIntoNeo4j(Set<Contributor> contributors) {
+        Session neo4jSession = Neo4jConnection.getSession();
+        for (Contributor contributor : contributors) {
+            neo4jSession.run("MERGE (c:Contributor {contributor: $contributor})",
+                    Values.parameters(
+                            "contributor", contributor.getContributor() != null ? contributor.getContributor() : ""
+                    ));
+        }
+        neo4jSession.close();
+        logger.info("Inserted {} unique contributors into Neo4j.", contributors.size());
+    }
+
+    // Insert resources into Neo4j
+    public static void insertResourcesIntoNeo4j(Set<Resource> resources) {
+        Session neo4jSession = Neo4jConnection.getSession();
+        for (Resource resource : resources) {
+            neo4jSession.run("MERGE (r:Resource {externalId: $externalId}) " +
+                            "ON CREATE SET r.pdf = $pdf, r.image = $image",
+                    Values.parameters(
+                            "externalId", resource.getExternalId(),
+                            "pdf", resource.getPdf() != null ? resource.getPdf() : "",
+                            "image", resource.getImage() != null ? resource.getImage() : ""
+                    ));
+        }
+        neo4jSession.close();
+        logger.info("Inserted {} unique resources into Neo4j.", resources.size());
+    }
+
+    // Insert subjects into Neo4j
+    public static void insertSubjectsIntoNeo4j(Set<Subject> subjects) {
+        Session neo4jSession = Neo4jConnection.getSession();
+        for (Subject subject : subjects) {
+            neo4jSession.run("MERGE (s:Subject {subject: $subject})",
+                    Values.parameters(
+                            "subject", subject.getSubject() != null ? subject.getSubject() : ""
+                    ));
+        }
+        neo4jSession.close();
+        logger.info("Inserted {} unique subjects into Neo4j.", subjects.size());
+    }
+
+    // Transfer items
+    public static void transferItems(int limit) throws Exception {
+        logger.debug("Starting transfer of unique items.");
+        Set<Item> uniqueItems = fetchUniqueItemsFromPostgres(limit);
+        insertItemsIntoNeo4j(uniqueItems);
+        logger.debug("Completed transfer of unique items.");
+    }
+
+    // Transfer call numbers
+    public static void transferCallNumbers(int limit) throws Exception {
+        logger.debug("Starting transfer of unique call numbers.");
+        Set<CallNumber> uniqueCallNumbers = fetchUniqueCallNumbersFromPostgres(limit);
+        insertCallNumbersIntoNeo4j(uniqueCallNumbers);
+        logger.debug("Completed transfer of unique call numbers.");
+    }
+
+    // Transfer contributors
+    public static void transferContributors(int limit) throws Exception {
+        logger.debug("Starting transfer of unique contributors.");
+        Set<Contributor> uniqueContributors = fetchUniqueContributorsFromPostgres(limit);
+        insertContributorsIntoNeo4j(uniqueContributors);
+        logger.debug("Completed transfer of unique contributors.");
+    }
+
+    // Transfer resources
+    public static void transferResources(int limit) throws Exception {
+        logger.debug("Starting transfer of unique resources.");
+        Set<Resource> uniqueResources = fetchUniqueResourcesFromPostgres(limit);
+        insertResourcesIntoNeo4j(uniqueResources);
+        logger.debug("Completed transfer of unique resources.");
+    }
+
+    // Transfer subjects
     public static void transferSubjects(int limit) throws Exception {
-        logger.debug("Starting transfer of subjects.");
-        List<Subject> subjects = fetchSubjectsFromPostgres(limit);
-        insertSubjectsIntoNeo4j(subjects);
-        logger.debug("Completed transfer of subjects.");
+        logger.debug("Starting transfer of unique subjects.");
+        Set<Subject> uniqueSubjects = fetchUniqueSubjectsFromPostgres(limit);
+        insertSubjectsIntoNeo4j(uniqueSubjects);
+        logger.debug("Completed transfer of unique subjects.");
     }
 }

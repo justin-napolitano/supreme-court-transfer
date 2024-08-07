@@ -1,24 +1,22 @@
 package com.supreme_court_transfer;
 
 public class CallNumber {
-    private int id;
-    private String callNumber;
     private String externalId;
+    private String callNumber;
 
     // Constructor
-    public CallNumber(int id, String callNumber, String externalId) {
-        this.id = id;
-        this.callNumber = callNumber;
+    public CallNumber(String externalId, String callNumber) {
         this.externalId = externalId;
+        this.callNumber = callNumber;
     }
 
     // Getters and setters
-    public int getId() {
-        return id;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getCallNumber() {
@@ -27,13 +25,5 @@ public class CallNumber {
 
     public void setCallNumber(String callNumber) {
         this.callNumber = callNumber;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
     }
 }
