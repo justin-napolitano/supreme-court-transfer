@@ -1,58 +1,26 @@
 package com.supreme_court_transfer;
 
 public class Item {
-    private int id;
-    private String notes;
-    private String callNumber;
-    private String createdPublished;
-    private String title;
-    private String date;
-    private String sourceCollection;
     private String externalId;
+    private String title;
+    private String callNumber;
+    private String date;
 
     // Constructor
-    public Item(int id, String notes, String callNumber, String createdPublished, String title, String date, String sourceCollection, String externalId) {
-        this.id = id;
-        this.notes = notes;
-        this.callNumber = callNumber;
-        this.createdPublished = createdPublished;
-        this.title = title;
-        this.date = date;
-        this.sourceCollection = sourceCollection;
+    public Item(String externalId, String title, String callNumber, String date) {
         this.externalId = externalId;
+        this.title = title;
+        this.callNumber = callNumber;
+        this.date = date;
     }
 
     // Getters and setters
-    public int getId() {
-        return id;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public String getCallNumber() {
-        return callNumber;
-    }
-
-    public void setCallNumber(String callNumber) {
-        this.callNumber = callNumber;
-    }
-
-    public String getCreatedPublished() {
-        return createdPublished;
-    }
-
-    public void setCreatedPublished(String createdPublished) {
-        this.createdPublished = createdPublished;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getTitle() {
@@ -63,27 +31,19 @@ public class Item {
         this.title = title;
     }
 
+    public String getCallNumber() {
+        return callNumber;
+    }
+
+    public void setCallNumber(String callNumber) {
+        this.callNumber = callNumber;
+    }
+
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getSourceCollection() {
-        return sourceCollection;
-    }
-
-    public void setSourceCollection(String sourceCollection) {
-        this.sourceCollection = sourceCollection;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
     }
 }

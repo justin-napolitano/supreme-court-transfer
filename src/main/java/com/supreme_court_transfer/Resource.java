@@ -1,26 +1,24 @@
 package com.supreme_court_transfer;
 
 public class Resource {
-    private int id;
+    private String externalId;
     private String pdf;
     private String image;
-    private String externalId;
 
     // Constructor
-    public Resource(int id, String pdf, String image, String externalId) {
-        this.id = id;
+    public Resource(String externalId, String pdf, String image) {
+        this.externalId = externalId;
         this.pdf = pdf;
         this.image = image;
-        this.externalId = externalId;
     }
 
     // Getters and setters
-    public int getId() {
-        return id;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public String getPdf() {
@@ -37,13 +35,5 @@ public class Resource {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
     }
 }

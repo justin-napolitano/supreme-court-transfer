@@ -16,25 +16,46 @@ public class App {
         logger.debug("Neo4j URL: {}", dotenv.get("NEO4J_URL"));
 
         int limit = Integer.MAX_VALUE; // Default to no limit
+        boolean clearGraph = false;    // Default to not clearing the graph
+        boolean createRelationships = false; // Default to not creating relationships
 
-        if (args.length > 0) {
-            try {
-                limit = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                logger.error("Invalid limit argument, using default value (no limit).", e);
+        // Process command line arguments
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("--cleargraph")) {
+                clearGraph = true;
+            } else if (arg.equalsIgnoreCase("--createrelationships")) {
+                createRelationships = true;
+            } else {
+                try {
+                    limit = Integer.parseInt(arg);
+                } catch (NumberFormatException e) {
+                    logger.error("Invalid limit argument, using default value (no limit).", e);
+                }
             }
         }
 
         try {
+            if (clearGraph) {
+                logger.info("Clearing the graph...");
+                ClearGraph.clearGraph();
+                logger.info("Graph cleared.");
+            }
+
             logger.info("Starting data transfer process with limit {}...", limit);
-            DataTransferService.transferCallNumbers(limit);
+            // DataTransferService.transferCallNumbers(limit);
             DataTransferService.transferContributors(limit);
-            DataTransferService.transferResources(limit);
+            // DataTransferService.transferResources(limit);
             DataTransferService.transferItems(limit);
             DataTransferService.transferSubjects(limit);
             logger.info("Data transfer process completed.");
+
+            if (createRelationships) {
+                logger.info("Creating relationships...");
+                RelationshipCreator.createRelationships(limit);
+                logger.info("Relationships created.");
+            }
         } catch (Exception e) {
-            logger.error("An error occurred during the data transfer process.", e);
+            logger.error("An error occurred during the process.", e);
         } finally {
             Neo4jConnection.close();
         }
