@@ -17,10 +17,10 @@ public class RelationshipCreator {
         logger.info("Starting relationship creation process with limit {}...", limit);
 
         try (Session session = Neo4jConnection.getSession()) {
-            relateItemsToSubjects(session, limit);
-            relateItemsToCallNumbers(session, limit);
+            relateItemsToSubjects(session, limit*5);
+            // relateItemsToCallNumbers(session, limit);
             relateItemsToContributors(session, limit);
-            relateItemsToResources(session, limit);
+            // relateItemsToResources(session, limit);
         } catch (Exception e) {
             logger.error("An error occurred during the relationship creation process.", e);
         }

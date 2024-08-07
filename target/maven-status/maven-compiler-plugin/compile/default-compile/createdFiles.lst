@@ -1,11 +1,11 @@
-com/supreme_court_transfer/Resource.class
 com/supreme_court_transfer/Contributor.class
-com/supreme_court_transfer/DataTransferService.class
-com/supreme_court_transfer/RelationshipCreator.class
 com/supreme_court_transfer/Item.class
 com/supreme_court_transfer/Subject.class
-com/supreme_court_transfer/App.class
 com/supreme_court_transfer/PostgresConnection.class
 com/supreme_court_transfer/CallNumber.class
 com/supreme_court_transfer/Neo4jConnection.class
+com/supreme_court_transfer/Resource.class
+com/supreme_court_transfer/DataTransferService.class
+com/supreme_court_transfer/RelationshipCreator.class
+com/supreme_court_transfer/App.class
 com/supreme_court_transfer/ClearGraph.class

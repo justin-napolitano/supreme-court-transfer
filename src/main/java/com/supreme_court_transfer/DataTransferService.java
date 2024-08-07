@@ -213,7 +213,7 @@ public class DataTransferService {
     // Transfer contributors
     public static void transferContributors(int limit) throws Exception {
         logger.debug("Starting transfer of unique contributors.");
-        Set<Contributor> uniqueContributors = fetchUniqueContributorsFromPostgres(limit);
+        Set<Contributor> uniqueContributors = fetchUniqueContributorsFromPostgres(limit*5);
         insertContributorsIntoNeo4j(uniqueContributors);
         logger.debug("Completed transfer of unique contributors.");
     }
@@ -229,7 +229,7 @@ public class DataTransferService {
     // Transfer subjects
     public static void transferSubjects(int limit) throws Exception {
         logger.debug("Starting transfer of unique subjects.");
-        Set<Subject> uniqueSubjects = fetchUniqueSubjectsFromPostgres(limit);
+        Set<Subject> uniqueSubjects = fetchUniqueSubjectsFromPostgres(limit*5);
         insertSubjectsIntoNeo4j(uniqueSubjects);
         logger.debug("Completed transfer of unique subjects.");
     }

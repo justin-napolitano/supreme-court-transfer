@@ -2,27 +2,27 @@
 CREATE TABLE items_temp AS
 SELECT *
 FROM items
-ORDER BY external_id;
+ORDER BY ID;
 
 CREATE TABLE callnumbers_temp AS
 SELECT *
 FROM callnumbers
-ORDER BY external_id;
+ORDER BY ID;
 
 CREATE TABLE contributors_temp AS
 SELECT *
 FROM contributors
-ORDER BY external_id;
+ORDER BY ID;
 
 CREATE TABLE resources_temp AS
 SELECT *
 FROM resources
-ORDER BY external_id;
+ORDER BY ID;
 
 CREATE TABLE subjects_temp AS
 SELECT *
 FROM subjects
-ORDER BY external_id;
+ORDER BY ID;
 
 -- Rename original tables to temporary names
 ALTER TABLE items RENAME TO items_old;

@@ -42,9 +42,9 @@ public class App {
             }
 
             logger.info("Starting data transfer process with limit {}...", limit);
-            DataTransferService.transferCallNumbers(limit);
+            // DataTransferService.transferCallNumbers(limit);
             DataTransferService.transferContributors(limit);
-            DataTransferService.transferResources(limit);
+            // DataTransferService.transferResources(limit);
             DataTransferService.transferItems(limit);
             DataTransferService.transferSubjects(limit);
             logger.info("Data transfer process completed.");
