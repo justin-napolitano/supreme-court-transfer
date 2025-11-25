@@ -7,8 +7,8 @@ githubUrl: https://github.com/justin-napolitano/supreme-court-transfer
 generatedAt: '2025-11-24T21:36:34.799Z'
 source: github-auto
 summary: >-
-  Learn how to efficiently transfer data from PostgreSQL to Neo4j with a Java
-  workflow, including setup and implementation details.
+  Learn how to efficiently transfer data from PostgreSQL to Neo4j with a Java workflow, including
+  setup and implementation details.
 tags:
   - java
   - postgres
@@ -25,8 +25,8 @@ seoSecondaryKeywords:
   - maven project setup
   - environment variables in java
 seoOptimized: true
-topicFamily: null
-topicFamilyConfidence: null
+topicFamily: datascience
+topicFamilyConfidence: 0.9
 kind: project
 entryLayout: project
 showInProjects: true
@@ -444,4 +444,5 @@ cd supreme-court-transfer
 mvn compile
 mvn exec:java -Dexec.mainClass="com.supreme_court_transfer.App"
 ```
+
 
