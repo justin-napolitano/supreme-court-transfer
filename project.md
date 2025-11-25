@@ -1,22 +1,30 @@
 ---
 slug: github-supreme-court-transfer
 id: github-supreme-court-transfer
-title: Streamlining Data Transfer from PostgreSQL to Neo4j with Java
+title: Data Transfer from PostgreSQL to Neo4j Using Java
 repo: justin-napolitano/supreme-court-transfer
 githubUrl: https://github.com/justin-napolitano/supreme-court-transfer
 generatedAt: '2025-11-24T21:36:34.799Z'
 source: github-auto
 summary: >-
-  In my previous few posts I put together a postgres db of supreme court meta
-  data. That is cool. I have a few more ideas.. but I wanted to explore the
-  graph a bit before expanding it with some nlp. So in this post I am writing
-  about how to ingest a bunch of nodes into neo4j with a java workflow. In the
-  next post I'll detail adding relationships.. because it is useless without
-  relationships.
-tags: []
-seoPrimaryKeyword: ''
-seoSecondaryKeywords: []
-seoOptimized: false
+  Learn how to efficiently transfer data from PostgreSQL to Neo4j with a Java
+  workflow, including setup and implementation details.
+tags:
+  - java
+  - postgres
+  - neo4j
+  - maven
+  - data transfer
+  - graph database
+  - relational database
+seoPrimaryKeyword: postgresql to neo4j data transfer
+seoSecondaryKeywords:
+  - java workflow for data transfer
+  - neo4j integration with java
+  - postgresql database connection
+  - maven project setup
+  - environment variables in java
+seoOptimized: true
 topicFamily: null
 topicFamilyConfidence: null
 kind: project
